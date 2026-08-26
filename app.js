@@ -16,5 +16,6 @@ app.use(
 );
 app.use("/auth", authRoutes);
 app.use("/data", qrRoutes);
+app.get("/home", (req, res) => res.json({ name: "himanshu" }));
 
 module.exports = { app };
