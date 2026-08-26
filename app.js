@@ -14,6 +14,13 @@ app.use(
     credentials: true,
   }),
 );
+
+app.set("etag", false);
+app.use((req, res, next) => {
+  res.setHeader("Cache-Control", "no-store");
+  next();
+});
+
 app.use("/auth", authRoutes);
 app.use("/data", qrRoutes);
 app.get("/home", (req, res) => res.json({ name: "himanshu" }));
