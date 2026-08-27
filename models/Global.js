@@ -16,7 +16,7 @@ const globalSchema = new mongoose.Schema({
     default: 0,
   },
 
-  uniqueClicks: {
+  uniqueVisitors: {
     type: Number,
     default: 0,
   },

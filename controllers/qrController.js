@@ -45,10 +45,10 @@ const getGlobalDataByCookie = async (req, res) => {
     const result = {
       totalScans: data.totalScans,
       totalClicks: data.totalClicks,
-      uniqueClicks: data.uniqueClicks,
+      uniqueVisitors: data.uniqueVisitors,
 
-      uniqueClicksRate: Math.round(
-        (data.uniqueClicks / (data.totalClicks + data.totalScans)) * 100,
+      uniqueVisitorsRate: Math.round(
+        (data.uniqueVisitors / (data.totalClicks + data.totalScans)) * 100,
       ),
 
       totalClicksInLast30Days: totalActionIsLastNDays("clicks", data.daily, 30),
