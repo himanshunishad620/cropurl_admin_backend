@@ -23,7 +23,7 @@ const linkClick = async (req, res) => {
     const location = await response.json();
     const city = location.city;
     console.log(ip, city, browser);
-
+    res.status(200).json({ ip, browser, city });
     // const qr = await QRCode.findOne({ shortCode });
     // if (!qr)
     //   return res.status(404).json({ status: false, message: "QR not found" });
@@ -55,7 +55,7 @@ const linkClick = async (req, res) => {
     // return res
     //   .status(500)
     //   .json({ success: true, message: "Internal Server Error" });
+    return res.status(500).json({ msg: "Internal Server Error" });
   }
-  res.status(200).json({ ip, browser, city });
 };
 module.exports = { linkClick };
