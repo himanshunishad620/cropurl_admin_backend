@@ -19,12 +19,12 @@ const linkClick = async (req, res) => {
   const browser = parser.getBrowser().name;
   //   const visitorId = req.cookies.visitorId;
   try {
-    const response = await fetch(`https://ipapi.co/${ip}/json/`);
-    const location = await response.json();
-    console.log(location);
-    const city = location.city;
-    console.log(ip, city, browser);
-    res.status(200).json({ ip, browser, city });
+    // const response = await fetch(`https://ipapi.co/${ip}/json/`);
+    // const location = await response.json();
+    // console.log(location);
+    const state = req.headers.get("x-vercel-ip-country-region");
+    console.log(ip, state, browser);
+    res.status(200).json({ ip, browser, state });
     // const qr = await QRCode.findOne({ shortCode });
     // if (!qr)
     //   return res.status(404).json({ status: false, message: "QR not found" });
