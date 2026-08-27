@@ -33,13 +33,12 @@ const linkClick = async (req, res) => {
   const visitorId = req.cookies.visitorId;
   try {
     const qr = await QRCode.findOne({ shortCode });
-    if (!qr)
+    if (!qr || !qr.isActive)
       return res.status(404).json({ status: false, message: "QR not found" });
     const response = await fetch(url, options);
-    const result = await response.text();
-    const city = result.region || "Anonymus";
+    const result = await response.json();
+    const city = result.city || "Anonymus";
     console.log(ip, city, browser);
-
     let visitor = !visitorId
       ? await Visitor.create({ shortCodes: [] })
       : await Visitor.findById(visitorId);
@@ -58,7 +57,7 @@ const linkClick = async (req, res) => {
       },
     );
     await QRAnalytics.findOneAndUpdate(
-      { userId: qr.userId },
+      { shortCode: qr.shortCode },
       {
         $inc: {
           uniqueClicks: isRepeatedClick ? 0 : 1,
@@ -73,7 +72,6 @@ const linkClick = async (req, res) => {
       visitor.shortCodes.push(shortCode);
       await visitor.save();
     }
-
     res.cookie("visitorId", visitor._id.toString(), {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -83,9 +81,6 @@ const linkClick = async (req, res) => {
     return res.status(200).json({ success: true, message: "Working" });
   } catch (error) {
     console.log(error);
-    // return res
-    //   .status(500)
-    //   .json({ success: true, message: "Internal Server Error" });
     return res.status(500).json({ msg: "Internal Server Error" });
   }
 };
