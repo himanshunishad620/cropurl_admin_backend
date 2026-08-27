@@ -1,4 +1,5 @@
 const Global = require("../models/Global");
+const QRAnalytics = require("../models/QRAnalytics");
 const QRCode = require("../models/QRCode");
 const Visitor = require("../models/Visitor");
 const UAParser = require("ua-parser-js");
@@ -10,47 +11,76 @@ const objKey = {
   c: "clicks",
   q: "scans",
 };
+
+const options = {
+  method: "GET",
+  headers: {
+    "x-rapidapi-key": "a3b112e753msh12c925143cfbee8p1cf487jsn0bc7765b17b9",
+    "x-rapidapi-host": "ip-geolocation21.p.rapidapi.com",
+    "Content-Type": "application/json",
+  },
+};
+
 const linkClick = async (req, res) => {
-  //   const { method, shortCode } = req.params;
+  const { method, shortCode } = req.params;
   const ip =
     req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
     req.socket.remoteAddress;
+  const url = `https://ip-geolocation21.p.rapidapi.com/backend/ipinfo/?ip=${ip}`;
+
   const parser = new UAParser(req.headers["user-agent"]);
   const browser = parser.getBrowser().name;
-  //   const visitorId = req.cookies.visitorId;
+  const visitorId = req.cookies.visitorId;
   try {
-    // const response = await fetch(`https://ipapi.co/${ip}/json/`);
-    // const location = await response.json();
-    // console.log(location);
-    const state = req.headers.get("x-vercel-ip-country-region");
-    console.log(ip, state, browser);
-    res.status(200).json({ ip, browser, state });
-    // const qr = await QRCode.findOne({ shortCode });
-    // if (!qr)
-    //   return res.status(404).json({ status: false, message: "QR not found" });
+    const qr = await QRCode.findOne({ shortCode });
+    if (!qr)
+      return res.status(404).json({ status: false, message: "QR not found" });
+    const response = await fetch(url, options);
+    const result = await response.text();
+    const city = result.region || "Anonymus";
+    console.log(ip, city, browser);
 
-    // let visitor = !visitorId
-    //   ? await Visitor.create({ shortCodes: [] })
-    //   : await Visitor.findById(visitorId);
-    // const isRepeatedClick = visitor.shortCodes.includes(shortCode);
-    // const today = new Date().toISOString().split("T")[0];
-    // await Global.findOneAndUpdate(
-    //   { userId: qr.userId },
-    //   {
-    //     $inc: {
-    //       uniqueVisitors: visitorId ? 0 : 1,
-    //       [methodKey[method]]: 1,
-    //       [`daily.${today}.${objKey[method]}`]: 1,
-    //     },
-    //   },
-    // );
-    // res.cookie("visitorId", visitor._id.toString(), {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === "production",
-    //   sameSite: "lax",
-    //   maxAge: 5 * 365 * 24 * 60 * 60 * 1000,
-    // });
-    // return res.status(200).json({ success: true, message: "Working" });
+    let visitor = !visitorId
+      ? await Visitor.create({ shortCodes: [] })
+      : await Visitor.findById(visitorId);
+    const isRepeatedClick = visitor.shortCodes.includes(shortCode);
+    const today = new Date().toISOString().split("T")[0];
+    await Global.findOneAndUpdate(
+      { userId: qr.userId },
+      {
+        $inc: {
+          uniqueVisitors: visitorId ? 0 : 1,
+          [methodKey[method]]: 1,
+          [`daily.${today}.${objKey[method]}`]: 1,
+          [`browser.${browser}`]: 1,
+          [`cities.${city}`]: 1,
+        },
+      },
+    );
+    await QRAnalytics.findOneAndUpdate(
+      { userId: qr.userId },
+      {
+        $inc: {
+          uniqueClicks: isRepeatedClick ? 0 : 1,
+          [methodKey[method]]: 1,
+          [`daily.${today}.${objKey[method]}`]: 1,
+          [`browser.${browser}`]: 1,
+          [`cities.${city}`]: 1,
+        },
+      },
+    );
+    if (!isRepeatedClick) {
+      visitor.shortCodes.push(shortCode);
+      await visitor.save();
+    }
+
+    res.cookie("visitorId", visitor._id.toString(), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 5 * 365 * 24 * 60 * 60 * 1000,
+    });
+    return res.status(200).json({ success: true, message: "Working" });
   } catch (error) {
     console.log(error);
     // return res
