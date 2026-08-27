@@ -20,8 +20,8 @@ const linkClick = async (req, res) => {
   //   const visitorId = req.cookies.visitorId;
   try {
     const response = await fetch(`https://ipapi.co/${ip}/json/`);
-    console.log(response);
     const location = await response.json();
+    console.log(location);
     const city = location.city;
     console.log(ip, city, browser);
     res.status(200).json({ ip, browser, city });
