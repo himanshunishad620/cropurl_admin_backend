@@ -4,7 +4,6 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes");
 const qrRoutes = require("./routes/qrRoutes");
-const { linkClick } = require("./controllers/clickController");
 const app = express();
 app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));
@@ -17,6 +16,7 @@ app.use(
 );
 
 app.set("etag", false);
+
 app.use((req, res, next) => {
   res.setHeader("Cache-Control", "no-store");
   next();
@@ -24,17 +24,5 @@ app.use((req, res, next) => {
 
 app.use("/auth", authRoutes);
 app.use("/data", qrRoutes);
-app.get("/home", (req, res) => res.json({ name: "himanshu" }));
-
-app.get("/", (req, res) => res.send("himanshu"));
-
-app.get("/:actionType/:shortCode", linkClick);
-
-app.get("/health", (req, res) =>
-  res.status(200).json({
-    success: true,
-    message: "Server is healthy",
-  }),
-);
 
 module.exports = { app };
