@@ -16,12 +16,13 @@ const actions = {
 
 const linkClick = async (req, res) => {
   const { actionType, shortCode } = req.params;
-  const visitorCookieId = req.cookies.visitorId;
+  const cookies = req.cookies;
   if (!totalActions[actionType || !actions[actionType]])
     return res.status(400).json({
       success: false,
       message: "Invalid URL",
     });
+  let visitorCookieId = null;
   try {
     const qrCode = await QRCode.findOne({
       shortCode,
@@ -34,6 +35,8 @@ const linkClick = async (req, res) => {
         message: "QR not found",
       });
     }
+    let visitorCookieIdKey = qrCode.userId;
+    visitorCookieId = cookies[visitorCookieIdKey] || null;
 
     let visitorData = null;
 
@@ -98,7 +101,7 @@ const linkClick = async (req, res) => {
     await Promise.all(updateOperations);
 
     if (isNewVisitor) {
-      res.cookie("visitorId", visitorData._id.toString(), {
+      res.cookie(visitorCookieIdKey, visitorData._id.toString(), {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
