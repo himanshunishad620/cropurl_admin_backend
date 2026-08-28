@@ -28,7 +28,7 @@ app.get("/home", (req, res) => res.json({ name: "himanshu" }));
 
 app.get("/", (req, res) => res.send("himanshu"));
 
-app.get("/:method/:shortCode", linkClick);
+app.get("/:actionType/:shortCode", linkClick);
 
 app.get("/health", (req, res) =>
   res.status(200).json({

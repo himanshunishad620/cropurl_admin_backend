@@ -4,18 +4,18 @@ const QRCode = require("../models/QRCode");
 const Visitor = require("../models/Visitor");
 const UAParser = require("ua-parser-js");
 
-const methodKey = {
+const totalActions = {
   c: "totalClicks",
   q: "totalScans",
 };
 
-const objKey = {
+const actions = {
   c: "clicks",
   q: "scans",
 };
 
 const linkClick = async (req, res) => {
-  const { method, shortCode } = req.params;
+  const { actionType, shortCode } = req.params;
   const visitorCookieId = req.cookies.visitorId;
 
   try {
@@ -50,38 +50,38 @@ const linkClick = async (req, res) => {
     const userAgentParser = new UAParser(req.headers["user-agent"]);
     const browserName = userAgentParser.getBrowser().name || "Unknown";
 
-    const clientIp =
-      req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
-      req.socket.remoteAddress;
+    // const clientIp =
+    //   req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
+    //   req.socket.remoteAddress;
 
     let cityName = "Unknown";
 
-    try {
-      const locationResponse = await fetch(
-        `https://ip-geolocation21.p.rapidapi.com/backend/ipinfo/?ip=${clientIp}`,
-        {
-          method: "GET",
-          headers: {
-            "x-rapidapi-key": process.env.RAPIDAPI_KEY,
-            "x-rapidapi-host": "ip-geolocation21.p.rapidapi.com",
-          },
-        },
-      );
-
-      if (locationResponse.ok) {
-        const locationData = await locationResponse.json();
-        cityName = locationData.city || "Unknown";
-      }
-    } catch (error) {
-      console.error("Geolocation error:", error);
-    }
+    // try {
+    //   const locationResponse = await fetch(
+    //     `https://ip-geolocation21.p.rapidapi.com/backend/ipinfo/?ip=${clientIp}`,
+    //     {
+    //       method: "GET",
+    //       headers: {
+    //         "x-rapidapi-key": process.env.RAPIDAPI_KEY,
+    //         "x-rapidapi-host": "ip-geolocation21.p.rapidapi.com",
+    //       },
+    //     },
+    //   );
+    //
+    //   if (locationResponse.ok) {
+    //     const locationData = await locationResponse.json();
+    //     cityName = locationData.city || "Unknown";
+    //   }
+    // } catch (error) {
+    //   console.error("Geolocation error:", error);
+    // }
 
     const currentDate = new Date().toISOString().split("T")[0];
 
     const globalAnalyticsUpdate = {
       $inc: {
-        [methodKey[method]]: 1,
-        [`daily.${currentDate}.${objKey[method]}`]: 1,
+        [totalActions[actionType]]: 1,
+        [`daily.${currentDate}.${actions[actionType]}`]: 1,
         [`browser.${browserName}`]: 1,
         [`cities.${cityName}`]: 1,
         uniqueVisitors: isNewVisitor ? 1 : 0,
@@ -90,8 +90,8 @@ const linkClick = async (req, res) => {
 
     const qrAnalyticsUpdate = {
       $inc: {
-        [methodKey[method]]: 1,
-        [`daily.${currentDate}.${objKey[method]}`]: 1,
+        [totalActions[actionType]]: 1,
+        [`daily.${currentDate}.${actions[actionType]}`]: 1,
         [`browser.${browserName}`]: 1,
         [`cities.${cityName}`]: 1,
         uniqueVisitors: hasVisitedBefore ? 0 : 1,
