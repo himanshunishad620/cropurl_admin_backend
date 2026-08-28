@@ -3,9 +3,11 @@ const getDataByDays = (data, days) => {
   days *= -1;
   const currentDays = entries.slice(days);
   const previousDays = entries.slice(days * 2, days);
-
   const getTotal = (days) =>
-    days.reduce((total, [, data]) => total + data.clicks + data.scans, 0);
+    days.reduce(
+      (total, [, data]) => total + (data?.clicks || 0) + (data?.scans || 0),
+      0,
+    );
 
   const currSum = getTotal(currentDays);
   const preSum = getTotal(previousDays);
@@ -13,12 +15,12 @@ const getDataByDays = (data, days) => {
   const isGrowth = currSum >= preSum;
   const diff = Math.abs(currSum - preSum);
 
-  const percentage =
-    preSum === 0 ? `${currSum} new` : Math.round((diff / preSum) * 100);
+  const percentage = preSum === 0 ? currSum : Math.round((diff / preSum) * 100);
 
   return {
     isGrowth,
     percentage,
+    isPercentage: !!preSum,
     currValue: currSum,
   };
 };

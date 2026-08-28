@@ -41,7 +41,6 @@ const getGlobalDataByCookie = async (req, res) => {
         msg: "Global data not found!",
       });
     }
-
     const result = {
       totalScans: data.totalScans,
       totalClicks: data.totalClicks,

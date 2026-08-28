@@ -17,7 +17,11 @@ const actions = {
 const linkClick = async (req, res) => {
   const { actionType, shortCode } = req.params;
   const visitorCookieId = req.cookies.visitorId;
-
+  if (!totalActions[actionType || !actions[actionType]])
+    return res.status(400).json({
+      success: false,
+      message: "Invalid URL",
+    });
   try {
     const qrCode = await QRCode.findOne({
       shortCode,
@@ -31,7 +35,7 @@ const linkClick = async (req, res) => {
       });
     }
 
-    let visitorData;
+    let visitorData = null;
 
     if (visitorCookieId) {
       visitorData = await Visitor.findById(visitorCookieId).lean();
@@ -50,34 +54,9 @@ const linkClick = async (req, res) => {
     const userAgentParser = new UAParser(req.headers["user-agent"]);
     const browserName = userAgentParser.getBrowser().name || "Unknown";
 
-    // const clientIp =
-    //   req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
-    //   req.socket.remoteAddress;
-
-    let cityName = "Unknown";
-
-    // try {
-    //   const locationResponse = await fetch(
-    //     `https://ip-geolocation21.p.rapidapi.com/backend/ipinfo/?ip=${clientIp}`,
-    //     {
-    //       method: "GET",
-    //       headers: {
-    //         "x-rapidapi-key": process.env.RAPIDAPI_KEY,
-    //         "x-rapidapi-host": "ip-geolocation21.p.rapidapi.com",
-    //       },
-    //     },
-    //   );
-    //
-    //   if (locationResponse.ok) {
-    //     const locationData = await locationResponse.json();
-    //     cityName = locationData.city || "Unknown";
-    //   }
-    // } catch (error) {
-    //   console.error("Geolocation error:", error);
-    // }
+    const cityName = "Basti";
 
     const currentDate = new Date().toISOString().split("T")[0];
-
     const globalAnalyticsUpdate = {
       $inc: {
         [totalActions[actionType]]: 1,
@@ -94,13 +73,12 @@ const linkClick = async (req, res) => {
         [`daily.${currentDate}.${actions[actionType]}`]: 1,
         [`browser.${browserName}`]: 1,
         [`cities.${cityName}`]: 1,
-        uniqueVisitors: hasVisitedBefore ? 0 : 1,
+        uniqueClicks: hasVisitedBefore ? 0 : 1,
       },
     };
 
     const updateOperations = [
       Global.findOneAndUpdate({ userId: qrCode.userId }, globalAnalyticsUpdate),
-
       QRAnalytics.findOneAndUpdate({ shortCode }, qrAnalyticsUpdate),
     ];
 
@@ -132,9 +110,8 @@ const linkClick = async (req, res) => {
       success: true,
       message: "Working",
     });
-  } catch (error) {
-    console.error(error);
-
+  } catch (err) {
+    console.error(err);
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
