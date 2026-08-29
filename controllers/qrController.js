@@ -1,16 +1,16 @@
+require("dotenv").config();
 const {
   getDataByDays,
   getGraphDataByDays,
   getTopNData,
   totalActionIsLastNDays,
 } = require("../helper/dataCleaner");
-
 const { decodeToken } = require("../helper/jwt");
-
 const Global = require("../models/Global");
 const QRAnalytics = require("../models/QRAnalytics");
 const QRCode = require("../models/QRCode");
 const User = require("../models/User");
+const FirstShortUrl = require("../models/FirstShortUrl");
 
 // Get global analytics
 const getGlobalDataByCookie = async (req, res) => {
@@ -721,6 +721,39 @@ const deleteAccount = async (req, res) => {
   }
 };
 
+//Create Only Short URL
+const createShortURL = async (req, res) => {
+  const { destinationUrl, shortCode } = req.body;
+
+  if (!destinationUrl || !shortCode) {
+    return res.status(400).json({
+      success: false,
+      message: "Destination URL and short code are required.",
+    });
+  }
+
+  try {
+    const shortUrlData = await FirstShortUrl.create({
+      destinationUrl,
+      shortCode,
+    });
+
+    const shortUrl = `${process.env.CLICK_URL}/${shortUrlData.shortCode}`;
+
+    return res.status(201).json({
+      success: true,
+      shortUrl,
+    });
+  } catch (error) {
+    console.error("Error creating short URL:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error!",
+    });
+  }
+};
+
 module.exports = {
   fetchQR,
   fetchAnalytic,
@@ -733,4 +766,5 @@ module.exports = {
   deleteQRs,
   deleteAllQrs,
   deleteAccount,
+  createShortURL,
 };

@@ -11,6 +11,7 @@ const {
   createQRs,
   deleteAllQrs,
   deleteAccount,
+  createShortURL,
 } = require("../controllers/qrController");
 const router = Router();
 
@@ -25,5 +26,6 @@ router.delete("/deleteQR/:shortCode", deleteQR);
 router.delete("/deleteQRs", deleteQRs);
 router.delete("/deleteAllQRs", deleteAllQrs);
 router.delete("/deleteAccount", deleteAccount);
+router.post("/createFirstUrl", createShortURL);
 
 module.exports = router;
