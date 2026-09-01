@@ -18,8 +18,8 @@ const getGlobalDataByCookie = async (req, res) => {
 
   if (!token) {
     return res.status(401).json({
-      success: false,
-      msg: "Unauthorized access!",
+      status: "Unauthorized",
+      message: "Authentication is required to access global analytics data.",
     });
   }
 
@@ -28,8 +28,8 @@ const getGlobalDataByCookie = async (req, res) => {
 
     if (!userId) {
       return res.status(401).json({
-        success: false,
-        msg: "Unauthorized access!",
+        status: "Unauthorized",
+        message: "Authentication is required to access global analytics data.",
       });
     }
 
@@ -37,8 +37,8 @@ const getGlobalDataByCookie = async (req, res) => {
 
     if (!data) {
       return res.status(404).json({
-        success: false,
-        msg: "Global data not found!",
+        status: "Not Found",
+        message: "Global analytics data could not be found.",
       });
     }
     const result = {
@@ -69,16 +69,16 @@ const getGlobalDataByCookie = async (req, res) => {
     };
 
     return res.status(200).json({
-      success: true,
-      msg: "Data Found!",
+      status: "Success",
+      message: "Global analytics data fetched successfully.",
       result,
     });
   } catch (error) {
     console.error("Get global data error:", error);
 
     return res.status(500).json({
-      success: false,
-      msg: "Unable to fetch global data!",
+      status: "Internal Server Error",
+      message: "Unable to fetch global analytics data. Please try again later.",
     });
   }
 };
@@ -90,8 +90,8 @@ const createQR = async (req, res) => {
 
   if (!token) {
     return res.status(401).json({
-      success: false,
-      msg: "Unauthorized user",
+      status: "Unauthorized",
+      message: "You must be authenticated to create a QR code.",
     });
   }
 
@@ -100,8 +100,8 @@ const createQR = async (req, res) => {
 
     if (!decoded?.userId) {
       return res.status(401).json({
-        success: false,
-        msg: "Unauthorized user",
+        status: "Unauthorized",
+        message: "You must be authenticated to create a QR code.",
       });
     }
 
@@ -123,16 +123,16 @@ const createQR = async (req, res) => {
     ]);
 
     return res.status(201).json({
-      success: true,
-      msg: "QR created successfully",
+      status: "Created",
+      message: "QR code created successfully.",
       result,
     });
   } catch (error) {
     console.error("Create QR error:", error);
 
     return res.status(500).json({
-      success: false,
-      msg: "Something went wrong",
+      status: "Internal Server Error",
+      message: "Unable to create the QR code. Please try again later.",
     });
   }
 };
@@ -144,8 +144,8 @@ const createQRs = async (req, res) => {
 
   if (!token) {
     return res.status(401).json({
-      success: false,
-      msg: "Unauthorized user",
+      status: "Unauthorized",
+      message: "You must be authenticated to create a QR code.",
     });
   }
 
@@ -154,15 +154,15 @@ const createQRs = async (req, res) => {
 
     if (!decoded?.userId) {
       return res.status(401).json({
-        success: false,
-        msg: "Unauthorized user",
+        status: "Unauthorized",
+        message: "You must be authenticated to create a QR code.",
       });
     }
 
     if (!Array.isArray(qr) || !qr.length) {
       return res.status(400).json({
-        success: false,
-        msg: "QR data is required",
+        status: "Bad Request",
+        message: "QR data is required to create multiple QR codes.",
       });
     }
 
@@ -184,15 +184,14 @@ const createQRs = async (req, res) => {
     ]);
 
     return res.status(201).json({
-      success: true,
-      msg: "QRs created successfully",
+      status: "Created",
+      message: "QR codes created successfully.",
     });
   } catch (error) {
     console.error("Create QRs error:", error);
-
     return res.status(500).json({
-      success: false,
-      msg: "Something went wrong",
+      status: "Internal Server Error",
+      message: "Unable to create the QR codes. Please try again later.",
     });
   }
 };
@@ -204,8 +203,8 @@ const fetchAnalytic = async (req, res) => {
 
   if (!token) {
     return res.status(401).json({
-      success: false,
-      msg: "Token not found!",
+      status: "Unauthorized",
+      message: "You must be authenticated to create a QR code.",
     });
   }
 
@@ -214,8 +213,8 @@ const fetchAnalytic = async (req, res) => {
 
     if (!userId) {
       return res.status(401).json({
-        success: false,
-        msg: "User not found!",
+        status: "Unauthorized",
+        message: "You must be authenticated to create a QR code.",
       });
     }
 
@@ -226,8 +225,8 @@ const fetchAnalytic = async (req, res) => {
 
     if (!data) {
       return res.status(404).json({
-        success: false,
-        msg: "Data Not Found",
+        status: "Not Found",
+        message: "Analytics data for the requested QR code could not be found.",
       });
     }
 
@@ -251,16 +250,16 @@ const fetchAnalytic = async (req, res) => {
     };
 
     return res.status(200).json({
-      success: true,
-      msg: "Data found",
+      status: "Success",
+      message: "QR analytics data fetched successfully.",
       data: result,
     });
   } catch (error) {
     console.error("Fetch analytics error:", error);
 
     return res.status(500).json({
-      success: false,
-      msg: "Unable to fetch analytics!",
+      status: "Internal Server Error",
+      message: "Unable to fetch QR analytics. Please try again later.",
     });
   }
 };
@@ -271,8 +270,8 @@ const fetchAllQr = async (req, res) => {
 
   if (!token) {
     return res.status(401).json({
-      success: false,
-      msg: "Cookie not found!",
+      status: "Unauthorized",
+      message: "You must be authenticated to create a QR code.",
     });
   }
 
@@ -281,8 +280,8 @@ const fetchAllQr = async (req, res) => {
 
     if (!userId) {
       return res.status(401).json({
-        success: false,
-        msg: "User not found!",
+        status: "Unauthorized",
+        message: "You must be authenticated to create a QR code.",
       });
     }
 
@@ -319,10 +318,9 @@ const fetchAllQr = async (req, res) => {
       .skip(skip)
       .limit(pageLimit)
       .lean();
-
     return res.status(200).json({
-      success: true,
-      msg: "Data found",
+      status: "Success",
+      message: "QR codes fetched successfully.",
       data: {
         arr: data,
         currCount: data.length,
@@ -338,8 +336,8 @@ const fetchAllQr = async (req, res) => {
     console.error("Fetch all QR error:", error);
 
     return res.status(500).json({
-      success: false,
-      msg: "Unable to fetch QR codes!",
+      status: "Internal Server Error",
+      message: "Unable to fetch QR codes. Please try again later.",
     });
   }
 };
@@ -351,8 +349,8 @@ const fetchQR = async (req, res) => {
 
   if (!token) {
     return res.status(401).json({
-      success: false,
-      message: "Unauthorized.",
+      status: "Unauthorized",
+      message: "You must be authenticated to create a QR code.",
     });
   }
 
@@ -361,15 +359,15 @@ const fetchQR = async (req, res) => {
 
     if (!decoded?.userId) {
       return res.status(401).json({
-        success: false,
-        message: "Invalid authentication token.",
+        status: "Unauthorized",
+        message: "You must be authenticated to create a QR code.",
       });
     }
 
     if (!shortCode || typeof shortCode !== "string") {
       return res.status(400).json({
-        success: false,
-        message: "QR code is required.",
+        status: "Bad Request",
+        message: "A QR code is required to update the QR details.",
       });
     }
 
@@ -380,13 +378,13 @@ const fetchQR = async (req, res) => {
 
     if (!data) {
       return res.status(404).json({
-        success: false,
-        message: "QR code not found.",
+        status: "Not Found",
+        message: "The requested QR code could not be found.",
       });
     }
 
     return res.status(200).json({
-      success: true,
+      status: "Success",
       message: "QR code fetched successfully.",
       data,
     });
@@ -394,8 +392,8 @@ const fetchQR = async (req, res) => {
     console.error("Fetch QR error:", error);
 
     return res.status(500).json({
-      success: false,
-      message: "Unable to fetch QR code. Please try again later.",
+      status: "Internal Server Error",
+      message: "Unable to fetch the QR code. Please try again later.",
     });
   }
 };
@@ -406,8 +404,8 @@ const updateQR = async (req, res) => {
 
   if (!token) {
     return res.status(401).json({
-      success: false,
-      message: "Unauthorized.",
+      status: "Unauthorized",
+      message: "You must be authenticated to create a QR code.",
     });
   }
 
@@ -416,8 +414,8 @@ const updateQR = async (req, res) => {
 
     if (!userId) {
       return res.status(401).json({
-        success: false,
-        message: "Invalid authentication token.",
+        status: "Unauthorized",
+        message: "You must be authenticated to create a QR code.",
       });
     }
 
@@ -426,29 +424,29 @@ const updateQR = async (req, res) => {
 
     if (!shortCode) {
       return res.status(400).json({
-        success: false,
-        message: "QR code is required.",
+        status: "Bad Request",
+        message: "A QR code is required to update the QR details.",
       });
     }
 
     if (typeof status !== "boolean") {
       return res.status(400).json({
-        success: false,
-        message: "Status must be true or false.",
+        status: "Bad Request",
+        message: "Status must be provided as either true or false.",
       });
     }
 
     if (typeof name !== "string" || !name.trim() || name.trim().length > 100) {
       return res.status(400).json({
-        success: false,
-        message: "Please provide a valid QR name.",
+        status: "Bad Request",
+        message: "Please provide a valid QR name within the allowed length.",
       });
     }
 
     if (typeof destinationUrl !== "string" || !destinationUrl.trim()) {
       return res.status(400).json({
-        success: false,
-        message: "Destination URL is required.",
+        status: "Bad Request",
+        message: "A valid destination URL is required to update the QR code.",
       });
     }
 
@@ -458,15 +456,15 @@ const updateQR = async (req, res) => {
       parsedUrl = new URL(destinationUrl.trim());
     } catch {
       return res.status(400).json({
-        success: false,
-        message: "Please provide a valid destination URL.",
+        status: "Bad Request",
+        message: "A valid destination URL is required to update the QR code.",
       });
     }
 
     if (!["http:", "https:"].includes(parsedUrl.protocol)) {
       return res.status(400).json({
-        success: false,
-        message: "Only HTTP and HTTPS URLs are allowed.",
+        status: "Bad Request",
+        message: "A valid destination URL is required to update the QR code.",
       });
     }
 
@@ -490,22 +488,22 @@ const updateQR = async (req, res) => {
 
     if (!data) {
       return res.status(404).json({
-        success: false,
-        message: "QR code not found.",
+        status: "Not Found",
+        message: "The QR code you are trying to update could not be found.",
       });
     }
 
     return res.status(200).json({
-      success: true,
-      message: "QR updated successfully.",
+      status: "Success",
+      message: "QR code updated successfully.",
       data,
     });
   } catch (error) {
     console.error("Update QR error:", error);
 
     return res.status(500).json({
-      success: false,
-      message: "Unable to update QR code. Please try again later.",
+      status: "Internal Server Error",
+      message: "Unable to update the QR code. Please try again later.",
     });
   }
 };
@@ -516,8 +514,8 @@ const deleteQR = async (req, res) => {
 
   if (!token) {
     return res.status(401).json({
-      success: false,
-      message: "Unauthorized.",
+      status: "Unauthorized",
+      message: "You must be authenticated to create a QR code.",
     });
   }
 
@@ -526,8 +524,8 @@ const deleteQR = async (req, res) => {
 
     if (!userId) {
       return res.status(401).json({
-        success: false,
-        message: "Invalid authentication token.",
+        status: "Unauthorized",
+        message: "You must be authenticated to create a QR code.",
       });
     }
 
@@ -535,8 +533,8 @@ const deleteQR = async (req, res) => {
 
     if (!shortCode || typeof shortCode !== "string") {
       return res.status(400).json({
-        success: false,
-        message: "Invalid QR code.",
+        status: "Bad Request",
+        message: "A valid QR code is required to process the delete request.",
       });
     }
 
@@ -551,15 +549,15 @@ const deleteQR = async (req, res) => {
     ]);
 
     return res.status(200).json({
-      success: true,
+      status: "Success",
       message: "QR code deleted successfully.",
     });
   } catch (error) {
     console.error("Delete QR error:", error);
 
     return res.status(500).json({
-      success: false,
-      message: "Unable to delete QR code. Please try again later.",
+      status: "Internal Server Error",
+      message: "Unable to delete the QR code. Please try again later.",
     });
   }
 };
@@ -570,8 +568,8 @@ const deleteQRs = async (req, res) => {
 
   if (!token) {
     return res.status(401).json({
-      success: false,
-      message: "Unauthorized.",
+      status: "Unauthorized",
+      message: "You must be authenticated to create a QR code.",
     });
   }
 
@@ -589,8 +587,8 @@ const deleteQRs = async (req, res) => {
 
     if (!Array.isArray(shortCodes) || shortCodes.length === 0) {
       return res.status(400).json({
-        success: false,
-        message: "Please provide at least one QR code.",
+        status: "Bad Request",
+        message: "Please provide at least one QR code to delete.",
       });
     }
 
@@ -600,8 +598,8 @@ const deleteQRs = async (req, res) => {
 
     if (validShortCodes.length === 0) {
       return res.status(400).json({
-        success: false,
-        message: "Invalid short codes.",
+        status: "Bad Request",
+        message: "The provided QR codes contain invalid short codes.",
       });
     }
 
@@ -616,7 +614,7 @@ const deleteQRs = async (req, res) => {
     ]);
 
     return res.status(200).json({
-      success: true,
+      status: "Success",
       message: "QR codes deleted successfully.",
       data: {
         deletedQrs: qrResult.deletedCount,
@@ -627,8 +625,9 @@ const deleteQRs = async (req, res) => {
     console.error("Delete QRs error:", error);
 
     return res.status(500).json({
-      success: false,
-      message: "Unable to delete QR codes. Please try again later.",
+      status: "Internal Server Error",
+      message:
+        "Unable to delete the selected QR codes. Please try again later.",
     });
   }
 };
@@ -639,8 +638,8 @@ const deleteAllQrs = async (req, res) => {
 
   if (!token) {
     return res.status(401).json({
-      success: false,
-      message: "Unauthorized.",
+      status: "Unauthorized",
+      message: "You must be authenticated to create a QR code.",
     });
   }
 
@@ -649,8 +648,8 @@ const deleteAllQrs = async (req, res) => {
 
     if (!userId) {
       return res.status(401).json({
-        success: false,
-        message: "Invalid authentication token.",
+        status: "Unauthorized",
+        message: "You must be authenticated to create a QR code.",
       });
     }
 
@@ -660,7 +659,7 @@ const deleteAllQrs = async (req, res) => {
     ]);
 
     return res.status(200).json({
-      success: true,
+      status: "Success",
       message: "All QR codes deleted successfully.",
       data: {
         deletedQrs: qrResult.deletedCount,
@@ -669,10 +668,9 @@ const deleteAllQrs = async (req, res) => {
     });
   } catch (error) {
     console.error("Delete all QRs error:", error);
-
     return res.status(500).json({
-      success: false,
-      message: "Failed to delete QR codes. Please try again later.",
+      status: "Internal Server Error",
+      message: "Unable to delete all QR codes. Please try again later.",
     });
   }
 };
@@ -683,8 +681,8 @@ const deleteAccount = async (req, res) => {
 
   if (!token) {
     return res.status(401).json({
-      success: false,
-      msg: "Unauthorized",
+      status: "Unauthorized",
+      message: "Authentication is required to delete this account.",
     });
   }
 
@@ -692,9 +690,9 @@ const deleteAccount = async (req, res) => {
     const { userId } = decodeToken(token);
 
     if (!userId) {
-      return res.status(401).json({
-        success: false,
-        msg: "User not found!",
+      return res.status(404).json({
+        status: "Not Found",
+        message: "The authenticated user account could not be found.",
       });
     }
 
@@ -708,31 +706,46 @@ const deleteAccount = async (req, res) => {
     res.clearCookie("token");
 
     return res.status(200).json({
-      success: true,
-      msg: "Deleted",
+      status: "Success",
+      message: "Account deleted successfully.",
     });
   } catch (error) {
     console.error("Delete account error:", error);
 
     return res.status(500).json({
-      success: false,
-      msg: "Something went wrong",
+      status: "Internal Server Error",
+      message: "Unable to delete the account. Please try again later.",
     });
   }
 };
 
 //Create Only Short URL
 const createShortURL = async (req, res) => {
+  const { token } = req.cookies;
+  if (!token) {
+    return res.status(401).json({
+      status: "Unauthorized",
+      message: "Authentication is required to delete this account.",
+    });
+  }
   const { destinationUrl, shortCode } = req.body;
 
   if (!destinationUrl || !shortCode) {
     return res.status(400).json({
-      success: false,
-      message: "Destination URL and short code are required.",
+      status: "Bad Request",
+      message:
+        "Both destination URL and short code are required to create a short URL.",
     });
   }
 
   try {
+    const { userId } = decodeToken(token);
+    if (!userId) {
+      return res.status(401).json({
+        status: "Unauthorized",
+        message: "Authentication is required to delete this account.",
+      });
+    }
     const shortUrlData = await FirstShortUrl.create({
       destinationUrl,
       shortCode,
@@ -741,15 +754,16 @@ const createShortURL = async (req, res) => {
     const shortUrl = `${process.env.CLICK_URL}/${shortUrlData.shortCode}`;
 
     return res.status(201).json({
-      success: true,
+      status: "Created",
+      message: "Short URL created successfully.",
       shortUrl,
     });
   } catch (error) {
     console.error("Error creating short URL:", error);
 
     return res.status(500).json({
-      success: false,
-      message: "Internal Server Error!",
+      status: "Internal Server Error",
+      message: "Unable to create the short URL. Please try again later.",
     });
   }
 };
