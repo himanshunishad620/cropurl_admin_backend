@@ -1218,8 +1218,8 @@ const updatePassword = async (req, res) => {
     );
 
     if (!isPasswordMatched) {
-      return res.status(401).json({
-        status: "Unauthorized",
+      return res.status(400).json({
+        status: "Bad Request",
         message: "The current password is incorrect.",
       });
     }
