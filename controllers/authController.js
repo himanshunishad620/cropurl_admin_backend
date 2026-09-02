@@ -897,6 +897,7 @@ const verifyAndUpdate = async (req, res) => {
     return res.status(200).json({
       status: "Success",
       message: "Email address updated successfully.",
+      newEmail: emailUpdateRequest.newEmail,
     });
   } catch (error) {
     console.error("Email verification error:", error);
