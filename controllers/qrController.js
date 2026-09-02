@@ -94,8 +94,10 @@ const createQR = async (req, res) => {
       message: "You must be authenticated to create a QR code.",
     });
   }
+
   try {
     const decoded = decodeToken(token);
+
     if (!decoded?.userId) {
       return res.status(401).json({
         status: "Unauthorized",
@@ -540,11 +542,12 @@ const deleteQR = async (req, res) => {
       userId,
       shortCode: shortCode.trim(),
     };
-    print();
+
     await Promise.all([
       QRCode.deleteOne(filter),
       QRAnalytics.deleteOne(filter),
     ]);
+
     return res.status(200).json({
       status: "Success",
       message: "QR code deleted successfully.",

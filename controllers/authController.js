@@ -828,7 +828,7 @@ const verifyAndRegister = async (req, res) => {
       status: "Created",
       message: "Account created successfully.",
     });
-  } catch {
+  } catch (error) {
     return res.status(500).json({
       status: "Internal Server Error",
       message: "Unable to create the account. Please try again later.",
