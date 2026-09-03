@@ -23,9 +23,13 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", (req, res) => {
-  sendEmail("himanshunishad620@gmail.com");
-  res.send("Email");
+app.get("/", async (req, res) => {
+  try {
+    await sendEmail("himanshunishad620@gmail.com");
+    res.send("Email");
+  } catch (error) {
+    res.send("Error");
+  }
 });
 
 app.use("/auth", authRoutes);
