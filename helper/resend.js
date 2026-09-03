@@ -143,4 +143,4 @@ const sendRegistrationVerificationLink = async (...args) => {
   }
 };
 
-module.exports = { sendEmail, sendRegistrationVerificationLink };
+module.exports = { sendRegistrationVerificationLink };
