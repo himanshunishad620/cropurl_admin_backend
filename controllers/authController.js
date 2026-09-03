@@ -700,6 +700,7 @@ const { generateToken, decodeToken } = require("../helper/jwt");
 const {
   sendRegistrationVerificationLink,
   sendForgotPasswordVerificationLink,
+  sendUpdateEmailVerificationLink,
 } = require("../helper/resend");
 const Global = require("../models/Global");
 const crypto = require("crypto");
@@ -1147,13 +1148,12 @@ const updateProfile = async (req, res) => {
 
       await user.save();
 
-      const link = `${process.env.CLIENT_URL}/verifyUpdateEmail/${rawToken}`;
-
+      const verificationLink = `${process.env.CLIENT_URL}/verifyUpdateEmail/${rawToken}`;
+      await sendUpdateEmailVerificationLink(verificationLink, email);
       return res.status(200).json({
         status: "Success",
         message:
           "Profile details updated successfully. Please verify your new email address to complete the email update.",
-        link,
       });
     }
 
