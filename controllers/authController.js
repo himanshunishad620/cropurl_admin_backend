@@ -697,7 +697,10 @@
 // };
 
 const { generateToken, decodeToken } = require("../helper/jwt");
-const { sendEmail } = require("../helper/resend");
+const {
+  sendEmail,
+  sendRegistrationVerificationLink,
+} = require("../helper/resend");
 const Global = require("../models/Global");
 const crypto = require("crypto");
 require("dotenv").config();
@@ -709,7 +712,6 @@ const EmailUpdate = require("../models/EmailUpdate");
 
 // Generate a verification link for new user registration
 const generateVerificationLink = async (req, res) => {
-  k;
   const { email, password, firstName, lastName } = req.body;
 
   try {
@@ -765,7 +767,7 @@ const generateVerificationLink = async (req, res) => {
     }
 
     const verificationLink = `${process.env.CLIENT_URL}/verifyEmail/${rawToken}`;
-
+    await sendRegistrationVerificationLink(verificationLink);
     return res.status(200).json({
       status: "Success",
       message: "Registration verification link generated successfully.",
