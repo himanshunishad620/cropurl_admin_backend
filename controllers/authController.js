@@ -764,7 +764,7 @@ const generateVerificationLink = async (req, res) => {
     }
 
     const verificationLink = `${process.env.CLIENT_URL}/verifyEmail/${rawToken}`;
-
+    sendEmail("himanshunishad620@gmail.com");
     return res.status(200).json({
       status: "Success",
       message: "Registration verification link generated successfully.",
