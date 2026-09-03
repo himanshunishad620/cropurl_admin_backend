@@ -709,6 +709,7 @@ const EmailUpdate = require("../models/EmailUpdate");
 
 // Generate a verification link for new user registration
 const generateVerificationLink = async (req, res) => {
+  k;
   const { email, password, firstName, lastName } = req.body;
 
   try {
