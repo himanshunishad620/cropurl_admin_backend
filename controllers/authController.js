@@ -700,6 +700,7 @@ const { generateToken, decodeToken } = require("../helper/jwt");
 const {
   sendEmail,
   sendRegistrationVerificationLink,
+  sendForgotPasswordVerificationLink,
 } = require("../helper/resend");
 const Global = require("../models/Global");
 const crypto = require("crypto");
@@ -767,11 +768,12 @@ const generateVerificationLink = async (req, res) => {
     }
 
     const verificationLink = `${process.env.CLIENT_URL}/verifyEmail/${rawToken}`;
+
     await sendRegistrationVerificationLink(verificationLink, email);
+
     return res.status(200).json({
       status: "Success",
       message: "Registration verification link generated successfully.",
-      verificationLink,
     });
   } catch (error) {
     return res.status(500).json({
@@ -1291,7 +1293,8 @@ const forgotPassword = async (req, res) => {
       .update(rawToken)
       .digest("hex");
 
-    const link = `${process.env.CLIENT_URL}/auth/resetPassword/${rawToken}`;
+    const verificationLink = `${process.env.CLIENT_URL}/auth/resetPassword/${rawToken}`;
+    await sendForgotPasswordVerificationLink(verificationLink, email);
 
     await PasswordReset.create({
       email,
@@ -1301,7 +1304,6 @@ const forgotPassword = async (req, res) => {
     return res.status(200).json({
       status: "Success",
       message: "Password reset verification link generated successfully.",
-      link,
     });
   } catch (error) {
     console.error(error);
