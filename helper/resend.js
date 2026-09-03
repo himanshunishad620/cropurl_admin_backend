@@ -105,7 +105,7 @@ const getRegistrationLinkUi = (verificationLink) => `<html lang="en">
         <tr>
           <td style="padding:20px 40px; text-align:center;">
             <p style="margin:0; font-size:12px; color:#94A3B8; font-family:Helvetica, Arial, sans-serif;">
-              CropURL &middot; cropurl.netlify.com
+              CropURL &middot; cropurl.netlify.app
             </p>
           </td>
         </tr>
@@ -225,7 +225,7 @@ const getForgotPasswordLinkUi = (verificationLink) => `<html lang="en">
         <tr>
           <td style="padding:20px 40px; text-align:center;">
             <p style="margin:0; font-size:12px; color:#94A3B8; font-family:Helvetica, Arial, sans-serif;">
-              CropURL &middot; cropurl.netlify.com
+              CropURL &middot; cropurl.netlify.app
             </p>
           </td>
         </tr>

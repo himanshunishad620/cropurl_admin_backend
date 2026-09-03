@@ -1292,7 +1292,7 @@ const forgotPassword = async (req, res) => {
       .update(rawToken)
       .digest("hex");
 
-    const verificationLink = `${process.env.CLIENT_URL}/auth/resetPassword/${rawToken}`;
+    const verificationLink = `${process.env.CLIENT_URL}/resetPassword/${rawToken}`;
     await sendForgotPasswordVerificationLink(verificationLink, email);
 
     await PasswordReset.create({
