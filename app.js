@@ -22,10 +22,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", (req, res) => {
-  res.redirect(process.env.CLIENT_URL);
-});
-
 app.use("/auth", authRoutes);
 app.use("/data", qrRoutes);
 
