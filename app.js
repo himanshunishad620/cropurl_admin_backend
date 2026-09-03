@@ -24,7 +24,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-  // sendEmail("himanshunishad620@gmail.com");
+  sendEmail("himanshunishad620@gmail.com");
   res.send("Email");
 });
 
