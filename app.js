@@ -4,7 +4,6 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes");
 const qrRoutes = require("./routes/qrRoutes");
-const { sendEmail } = require("./helper/resend");
 const app = express();
 app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));
@@ -23,14 +22,14 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", async (req, res) => {
-  try {
-    await sendEmail("himanshunishad620@gmail.com");
-    res.send("Email");
-  } catch (error) {
-    res.send("Error");
-  }
-});
+// app.get("/", async (req, res) => {
+//   try {
+//     await sendEmail("himanshunishad620@gmail.com");
+//     res.send("Email");
+//   } catch (error) {
+//     res.send("Error");
+//   }
+// });
 
 app.use("/auth", authRoutes);
 app.use("/data", qrRoutes);
