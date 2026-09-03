@@ -698,7 +698,6 @@
 
 const { generateToken, decodeToken } = require("../helper/jwt");
 const {
-  sendEmail,
   sendRegistrationVerificationLink,
   sendForgotPasswordVerificationLink,
 } = require("../helper/resend");
