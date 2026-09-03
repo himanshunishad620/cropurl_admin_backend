@@ -134,7 +134,7 @@ const sendRegistrationVerificationLink = async (...args) => {
   try {
     await resend.emails.send({
       from: "CropURL <noreply@cropurl.in>",
-      to: email,
+      to: args.email,
       subject: "Verify your email — link expires in 15 minutes",
       html: getRegistrationLinkUi(...args),
     });
