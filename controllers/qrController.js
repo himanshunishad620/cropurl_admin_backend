@@ -721,13 +721,6 @@ const deleteAccount = async (req, res) => {
 
 //Create Only Short URL
 const createShortURL = async (req, res) => {
-  const { token } = req.cookies;
-  if (!token) {
-    return res.status(401).json({
-      status: "Unauthorized",
-      message: "Authentication is required to delete this account.",
-    });
-  }
   const { destinationUrl, shortCode } = req.body;
 
   if (!destinationUrl || !shortCode) {
@@ -739,18 +732,10 @@ const createShortURL = async (req, res) => {
   }
 
   try {
-    const { userId } = decodeToken(token);
-    if (!userId) {
-      return res.status(401).json({
-        status: "Unauthorized",
-        message: "Authentication is required to delete this account.",
-      });
-    }
     const shortUrlData = await FirstShortUrl.create({
       destinationUrl,
       shortCode,
     });
-
     const shortUrl = `${process.env.CLICK_URL.split("/")[2]}/${shortUrlData.shortCode}`;
 
     return res.status(201).json({
