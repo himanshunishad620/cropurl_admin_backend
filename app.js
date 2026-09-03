@@ -22,14 +22,9 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.get("/", async (req, res) => {
-//   try {
-//     await sendEmail("himanshunishad620@gmail.com");
-//     res.send("Email");
-//   } catch (error) {
-//     res.send("Error");
-//   }
-// });
+app.get("/", (req, res) => {
+  res.redirect(process.env.CLIENT_URL);
+});
 
 app.use("/auth", authRoutes);
 app.use("/data", qrRoutes);
