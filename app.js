@@ -4,6 +4,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes");
 const qrRoutes = require("./routes/qrRoutes");
+const { sendEmail } = require("./helper/resend");
 const app = express();
 app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));
@@ -20,6 +21,11 @@ app.set("etag", false);
 app.use((req, res, next) => {
   res.setHeader("Cache-Control", "no-store");
   next();
+});
+
+app.get("/", (req, res) => {
+  // sendEmail("himanshunishad620@gmail.com");
+  res.send("Email");
 });
 
 app.use("/auth", authRoutes);
