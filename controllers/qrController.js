@@ -763,7 +763,7 @@ const createShortURL = async (req, res) => {
       destinationUrl,
       shortCode,
     });
-    const shortUrl = `${process.env.CLICK_URL.split("/")[2]}/${shortUrlData.shortCode}`;
+    const shortUrl = `${process.env.CLICK_URL.split("/")[2]}/f/${shortUrlData.shortCode}`;
 
     return res.status(201).json({
       status: "Created",
