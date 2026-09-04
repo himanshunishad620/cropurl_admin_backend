@@ -106,7 +106,13 @@ const createQR = async (req, res) => {
     }
 
     const { userId } = decoded;
-
+    const totalQRCount = await QRCode.countDocuments({ userId });
+    if (totalQRCount >= 10) {
+      return res.status(403).json({
+        status: "Maximum limit exceded!",
+        message: "You have reached the maximum limit of 10 QR codes.",
+      });
+    }
     const [result] = await Promise.all([
       QRCode.create({
         userId,
@@ -168,6 +174,14 @@ const createQRs = async (req, res) => {
 
     const { userId } = decoded;
 
+    const totalQRCount = await QRCode.countDocuments({ userId });
+    if (totalQRCount + qr.length >= 10) {
+      return res.status(403).json({
+        status: "Maximum limit exceded!",
+        message: "You have reached the maximum limit of 10 QR codes.",
+      });
+    }
+
     const qrData = qr.map((row) => ({
       ...row,
       userId,
@@ -226,7 +240,7 @@ const fetchAnalytic = async (req, res) => {
     if (!data) {
       return res.status(404).json({
         status: "Not Found",
-        message: "Analytics data for the requested QR code could not be found.",
+        message: "The requested QR code could not be found.",
       });
     }
 
@@ -285,9 +299,20 @@ const fetchAllQr = async (req, res) => {
       });
     }
 
-    const { page = 1, status = "All", search, order, limit = 10 } = req.query;
-
-    const sort = order === "Oldest" ? 1 : -1;
+    // const {
+    //   page = 1,
+    //   status = "All",
+    //   search,
+    //   order,
+    //   sort = "Ascending",
+    // } = req.query;s
+    const {
+      status = "All",
+      search,
+      order = "Ascending",
+      sort = "Date",
+    } = req.query;
+    // const sortOrder = order === "Oldest" ? 1 : -1;
 
     const filter = { userId };
 
@@ -301,35 +326,37 @@ const fetchAllQr = async (req, res) => {
         $options: "i",
       };
     }
+    const sortName = sort === "Date" ? "createdAt" : "totalEngagement";
+    const sortOrder = order === "Ascending" ? 1 : -1;
+    // const pageLimit = Number(limit) || 10;
+    // let pageNo = Number(page) || 1;
 
-    const pageLimit = Number(limit) || 10;
-    let pageNo = Number(page) || 1;
+    // const counts = await QRCode.countDocuments(filter);
 
-    const counts = await QRCode.countDocuments(filter);
+    // const totalPages = Math.ceil(counts / pageLimit);
 
-    const totalPages = Math.ceil(counts / pageLimit);
+    // pageNo = pageNo > totalPages ? 1 : pageNo;
 
-    pageNo = pageNo > totalPages ? 1 : pageNo;
+    // const skip = (pageNo - 1) * pageLimit;
+    const data = await QRCode.find(filter).sort({ [sortName]: sortOrder });
 
-    const skip = (pageNo - 1) * pageLimit;
-
-    const data = await QRCode.find(filter)
-      .sort({ createdAt: sort })
-      .skip(skip)
-      .limit(pageLimit)
-      .lean();
+    // const data = await QRCode.find(filter)
+    //   .sort({ createdAt: sortOrder })
+    //   .skip(skip)
+    //   .limit(pageLimit)
+    //   .lean();
     return res.status(200).json({
       status: "Success",
       message: "QR codes fetched successfully.",
       data: {
         arr: data,
-        currCount: data.length,
-        total: counts,
-        pageNo,
-        totalPages,
-        limit: pageLimit,
-        hasNextPage: pageNo < totalPages,
-        hasPreviousPage: pageNo > 1,
+        // currCount: data.length,
+        // total: counts,
+        // pageNo,
+        // totalPages,
+        // limit: pageLimit,
+        // hasNextPage: pageNo < totalPages,
+        // hasPreviousPage: pageNo > 1,
       },
     });
   } catch (error) {
