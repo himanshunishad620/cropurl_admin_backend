@@ -1149,7 +1149,7 @@ const updateProfile = async (req, res) => {
       await user.save();
 
       const verificationLink = `${process.env.CLIENT_URL}/verifyUpdateEmail/${rawToken}`;
-      await sendUpdateEmailVerificationLink(verificationLink, email);
+      await sendUpdateEmailVerificationLink(verificationLink);
       return res.status(200).json({
         status: "Success",
         message:
