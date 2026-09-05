@@ -53,6 +53,7 @@ NODE_ENV=development
 CLIENT_URL=<your_frontend_url>
 CLICK_URL=<your_click_tracking_backend_url>
 RESEND_API_KEY=<your_resend_api_key>
+EMAIL_ID-<name followed by <email addres>>
 
 ```
 
