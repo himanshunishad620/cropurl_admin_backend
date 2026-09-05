@@ -44,7 +44,6 @@ const getGlobalDataByCookie = async (req, res) => {
     }
 
     const dailyDate = get90DaysDataAsArray(data.daily);
-
     const result = {
       totalScans: data.totalScans,
       totalClicks: data.totalClicks,
@@ -52,7 +51,6 @@ const getGlobalDataByCookie = async (req, res) => {
       uniqueVisitorsRate: Math.round(
         (data.uniqueVisitors / (data.totalClicks + data.totalScans)) * 100,
       ),
-
       totalClicksInLast30Days: totalActionIsLastNDays("clicks", dailyDate, 30),
       totalScansInLast30Days: totalActionIsLastNDays("scans", dailyDate, 30),
 
