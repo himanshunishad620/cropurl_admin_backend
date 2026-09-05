@@ -29,39 +29,13 @@ It provides secure REST APIs for authentication, user management, URL and QR cod
 - **Bcrypt**
 - **Resend**
 
-## 📁 Project Structure
-
-```text
-backend/
-├── controllers/
-├── models/
-├── routes/
-├── config/
-├── app.js
-└── server.js
-```
-
-## ⚙️ Environment Variables
-
-Create a `.env` file in the root directory and configure the required environment variables:
-
-```env
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-CLIENT_URL=your_frontend_url
-
-```
-
-> ⚠️ Never commit your `.env` file or expose sensitive credentials in the repository.
-
 ## 💻 Installation
 
 Clone the repository:
 
 ```bash
-git clone <your-repository-url>
-cd <repository-name>
+git clone https://github.com/himanshunishad620/cropurl_admin_backend.git
+cd cropurl_admin_backend
 ```
 
 Install dependencies:
@@ -72,10 +46,20 @@ npm install
 
 Create your `.env` file and add the required configuration.
 
+```env
+MONGODB_URI=<your_mongodb_connection_string>
+JWT_SECRET=<your_jwt_secret>
+NODE_ENV=development
+CLIENT_URL=<your_frontend_url>
+CLICK_URL=<your_click_tracking_backend_url>
+RESEND_API_KEY=<your_resend_api_key>
+
+```
+
 Start the development server:
 
 ```bash
-npm run dev
+npm start
 ```
 
 The API will be available at:
@@ -83,6 +67,18 @@ The API will be available at:
 ```text
 http://localhost:5000
 ```
+
+## ⚙️ Environment Variables
+
+Create a `.env` file in the root directory and configure the required environment variables:
+
+> ⚠️ Never commit your `.env` file or expose sensitive credentials in the repository.
+
+## ⚠️ Dependency
+
+This project requires the **Click & Scan Management Backend** for click and QR scan tracking.
+
+**Repository:** https://github.com/himanshunishad620/cropurl_user_backend
 
 ## 🔌 API
 
