@@ -374,7 +374,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const sendRegistrationVerificationLink = async (verificationLink, email) => {
   try {
     await resend.emails.send({
-      from: "CropURL <noreply@cropurl.in>",
+      from: process.env.EMAIL_ID,
       to: email,
       subject: "Verify your email — link expires in 15 minutes",
       html: getRegistrationLinkUi(verificationLink),
@@ -387,7 +387,7 @@ const sendRegistrationVerificationLink = async (verificationLink, email) => {
 const sendForgotPasswordVerificationLink = async (verificationLink, email) => {
   try {
     await resend.emails.send({
-      from: "CropURL <noreply@cropurl.in>",
+      from: process.env.EMAIL_ID,
       to: email,
       subject: "Reset your password — link expires in 15 minutes",
       html: getForgotPasswordLinkUi(verificationLink),
@@ -400,7 +400,7 @@ const sendForgotPasswordVerificationLink = async (verificationLink, email) => {
 const sendUpdateEmailVerificationLink = async (verificationLink, email) => {
   try {
     await resend.emails.send({
-      from: "CropURL <noreply@cropurl.in>",
+      from: process.env.EMAIL_ID,
       to: email,
       subject: "Update your email — link expires in 15 minutes",
       html: getUpdateEmailLinkUi(verificationLink),
