@@ -1,5 +1,4 @@
-const getDataByDays = (data, days) => {
-  const entries = Object.entries(data);
+const getDataByDays = (entries, days) => {
   days *= -1;
   const currentDays = entries.slice(days);
   const previousDays = entries.slice(days * 2, days);
@@ -25,9 +24,8 @@ const getDataByDays = (data, days) => {
   };
 };
 
-const getGraphDataByDays = (data, days) => {
+const getGraphDataByDays = (entries, days) => {
   days *= -1;
-  const entries = Object.entries(data);
   const lastDays = entries.slice(days);
   const clicks = [],
     scans = [],
@@ -78,12 +76,27 @@ const getTopNData = (data, n) => {
 };
 
 const totalActionIsLastNDays = (action, data, n) => {
-  let entries = Object.entries(data).slice(-1 * n);
+  let entries = data.slice(-1 * n);
   let sum = entries.reduce((acc, pair) => acc + pair[1][action], 0);
   return sum;
 };
 
+const get90DaysDataAsArray = (daily) => {
+  const result = [];
+
+  for (let i = 89; i >= 0; i--) {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    const dateKey = date.toISOString().split("T")[0];
+    const record = daily[dateKey] ?? { clicks: 0, scans: 0 };
+    console.log([dateKey, record]);
+    result.push([dateKey, record]);
+  }
+  return result;
+};
+
 module.exports = {
+  get90DaysDataAsArray,
   totalActionIsLastNDays,
   getDataByDays,
   getTopNData,

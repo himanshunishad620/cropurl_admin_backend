@@ -4,6 +4,7 @@ const {
   getGraphDataByDays,
   getTopNData,
   totalActionIsLastNDays,
+  get90DaysDataAsArray,
 } = require("../helper/dataCleaner");
 const { decodeToken } = require("../helper/jwt");
 const Global = require("../models/Global");
@@ -41,6 +42,7 @@ const getGlobalDataByCookie = async (req, res) => {
         message: "Global analytics data could not be found.",
       });
     }
+    const dailyDate = get90DaysDataAsArray(data.daily);
     const result = {
       totalScans: data.totalScans,
       totalClicks: data.totalClicks,
@@ -50,18 +52,18 @@ const getGlobalDataByCookie = async (req, res) => {
         (data.uniqueVisitors / (data.totalClicks + data.totalScans)) * 100,
       ),
 
-      totalClicksInLast30Days: totalActionIsLastNDays("clicks", data.daily, 30),
+      totalClicksInLast30Days: totalActionIsLastNDays("clicks", dailyDate, 30),
 
-      totalScansInLast30Days: totalActionIsLastNDays("scans", data.daily, 30),
+      totalScansInLast30Days: totalActionIsLastNDays("scans", dailyDate, 30),
 
-      last1Days: getDataByDays(data.daily, 1),
-      last7Days: getDataByDays(data.daily, 7),
-      last30Days: getDataByDays(data.daily, 30),
+      last1Days: getDataByDays(dailyDate, 1),
+      last7Days: getDataByDays(dailyDate, 7),
+      last30Days: getDataByDays(dailyDate, 30),
 
       graphData: [
-        getGraphDataByDays(data.daily, 7),
-        getGraphDataByDays(data.daily, 30),
-        getGraphDataByDays(data.daily, 90),
+        getGraphDataByDays(dailyDate, 7),
+        getGraphDataByDays(dailyDate, 30),
+        getGraphDataByDays(dailyDate, 90),
       ],
 
       topNBrowsers: getTopNData(data.browser, 3),
@@ -244,6 +246,8 @@ const fetchAnalytic = async (req, res) => {
       });
     }
 
+    const dailyDate = get90DaysDataAsArray(data.daily);
+
     const totalActions = data.totalClicks + data.totalScans;
 
     const result = {
@@ -255,9 +259,9 @@ const fetchAnalytic = async (req, res) => {
         ? Math.round((data.uniqueClicks / totalActions) * 100)
         : 0,
 
-      totalClicksInLast30Days: totalActionIsLastNDays("clicks", data.daily, 30),
+      totalClicksInLast30Days: totalActionIsLastNDays("clicks", dailyDate, 30),
 
-      totalScansInLast30Days: totalActionIsLastNDays("scans", data.daily, 30),
+      totalScansInLast30Days: totalActionIsLastNDays("scans", dailyDate, 30),
 
       topNBrowsers: getTopNData(data.browser, 3),
       topNCities: getTopNData(data.cities, 3),
