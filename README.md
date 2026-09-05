@@ -68,12 +68,6 @@ The API will be available at:
 http://localhost:5000
 ```
 
-## ⚙️ Environment Variables
-
-Create a `.env` file in the root directory and configure the required environment variables:
-
-> ⚠️ Never commit your `.env` file or expose sensitive credentials in the repository.
-
 ## ⚠️ Dependency
 
 This project requires the **Click & Scan Management Backend** for click and QR scan tracking.
