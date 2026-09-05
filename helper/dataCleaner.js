@@ -89,7 +89,6 @@ const get90DaysDataAsArray = (daily) => {
     date.setDate(date.getDate() - i);
     const dateKey = date.toISOString().split("T")[0];
     const record = daily[dateKey] ?? { clicks: 0, scans: 0 };
-    console.log([dateKey, record]);
     result.push([dateKey, record]);
   }
   return result;

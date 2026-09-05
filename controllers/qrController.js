@@ -42,18 +42,18 @@ const getGlobalDataByCookie = async (req, res) => {
         message: "Global analytics data could not be found.",
       });
     }
+
     const dailyDate = get90DaysDataAsArray(data.daily);
+
     const result = {
       totalScans: data.totalScans,
       totalClicks: data.totalClicks,
       uniqueVisitors: data.uniqueVisitors,
-
       uniqueVisitorsRate: Math.round(
         (data.uniqueVisitors / (data.totalClicks + data.totalScans)) * 100,
       ),
 
       totalClicksInLast30Days: totalActionIsLastNDays("clicks", dailyDate, 30),
-
       totalScansInLast30Days: totalActionIsLastNDays("scans", dailyDate, 30),
 
       last1Days: getDataByDays(dailyDate, 1),
