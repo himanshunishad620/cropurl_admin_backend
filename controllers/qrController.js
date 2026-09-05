@@ -43,7 +43,7 @@ const getGlobalDataByCookie = async (req, res) => {
       });
     }
 
-    const dailyDate = get90DaysDataAsArray(data.daily);
+    const dailyData = get90DaysDataAsArray(data.daily);
     const result = {
       totalScans: data.totalScans,
       totalClicks: data.totalClicks,
@@ -51,17 +51,17 @@ const getGlobalDataByCookie = async (req, res) => {
       uniqueVisitorsRate: Math.round(
         (data.uniqueVisitors / (data.totalClicks + data.totalScans)) * 100,
       ),
-      totalClicksInLast30Days: totalActionIsLastNDays("clicks", dailyDate, 30),
-      totalScansInLast30Days: totalActionIsLastNDays("scans", dailyDate, 30),
+      totalClicksInLast30Days: totalActionIsLastNDays("clicks", dailyData, 30),
+      totalScansInLast30Days: totalActionIsLastNDays("scans", dailyData, 30),
 
-      last1Days: getDataByDays(dailyDate, 1),
-      last7Days: getDataByDays(dailyDate, 7),
-      last30Days: getDataByDays(dailyDate, 30),
+      last1Days: getDataByDays(dailyData, 1),
+      last7Days: getDataByDays(dailyData, 7),
+      last30Days: getDataByDays(dailyData, 30),
 
       graphData: [
-        getGraphDataByDays(dailyDate, 7),
-        getGraphDataByDays(dailyDate, 30),
-        getGraphDataByDays(dailyDate, 90),
+        getGraphDataByDays(dailyData, 7),
+        getGraphDataByDays(dailyData, 30),
+        getGraphDataByDays(dailyData, 90),
       ],
 
       topNBrowsers: getTopNData(data.browser, 3),
