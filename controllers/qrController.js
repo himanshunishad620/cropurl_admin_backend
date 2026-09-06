@@ -43,6 +43,7 @@ const getGlobalDataByCookie = async (req, res) => {
       });
     }
 
+    console.log(data);
     const dailyData = get90DaysDataAsArray(data.daily);
     const result = {
       totalScans: data.totalScans,

@@ -46,6 +46,14 @@ const globalSchema = new mongoose.Schema({
     },
     default: {},
   },
+  browsers: {
+    type: Map,
+    of: {
+      type: Number,
+      default: 0,
+    },
+    default: {},
+  },
 });
 
 const Global = mongoose.model("Global", globalSchema);
