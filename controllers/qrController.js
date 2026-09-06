@@ -65,7 +65,7 @@ const getGlobalDataByCookie = async (req, res) => {
         getGraphDataByDays(dailyData, 90),
       ],
 
-      topNBrowsers: getTopNData(data.browser, 3),
+      topNBrowsers: getTopNData(data.browsers, 3),
       topNCities: getTopNData(data.cities, 3),
     };
 
