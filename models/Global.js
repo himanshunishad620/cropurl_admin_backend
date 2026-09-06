@@ -46,7 +46,7 @@ const globalSchema = new mongoose.Schema({
     },
     default: {},
   },
-  browsers: {
+  browser: {
     type: Map,
     of: {
       type: Number,
